@@ -68,9 +68,11 @@ function upload(){
     }).then(() => {
         return sftp.put('./public/data.json', `${config.remote.path}/data.json`);
     }).then((data) => {
+        sftp.end();
         console.log('success upload');
     }).catch((err) => {
         console.log(err, 'catch error');
+        stp.end();
     });
 }
 
