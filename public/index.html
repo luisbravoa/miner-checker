@@ -1,0 +1,99 @@
+
+<html>
+    <head>
+        <style>
+            html, body{
+                padding: 0;
+                margin: 0;
+                height: 100%;
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+            }
+            #data, #log{
+                padding: 0;
+                margin: 0;
+            }
+            #data {
+                height: 300px;
+                overflow: auto;
+                padding-top: 10px;
+            }
+            #log{
+                height: calc(100% - 25px);
+                background-color: black;
+                overflow: auto;
+                color: white;
+                font-size: 10px;
+            }
+
+            #info{
+                text-align: center;
+                background-color: black;
+                color: white;
+                height: 25px;
+            }
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+    </head>
+    <body>
+
+        <div id="info"></div>
+        <div id="log"></div>
+        <script>
+            const API = {
+                getLog(){
+                    return fetch('./log.html').then(function(response) {
+                        return response.text();
+                    });
+                },
+                getData(){
+                    return fetch('./data.json').then(function(response) {
+                        return response.json();
+                    });
+                },
+                showLog(){
+                    let logElement = document.querySelector('#log');
+
+                    this.getLog()
+                    .then((data)=>{
+                        data = data.replace('<html><body', '<div').replace('</body></html>', '</div>');
+                        logElement.innerHTML = data;
+                        logElement.scrollTop = logElement.scrollHeight;
+                    })
+                    .catch((e)=>{
+                        console.error(e);
+                    });
+                },
+                showData(){
+                    let element = document.querySelector('#data');
+
+                    this.getData()
+                    .then((data)=>{
+                        let date = new Date(data.lastUpdated);
+                        let formated = moment(date).format('MMMM Do YYYY, h:mm:ss a');
+                        document.querySelector('#info').textContent = `Last updated: ${formated} (${moment().startOf(date).fromNow()})`;
+                    })
+                    .catch((e)=>{
+                        console.error(e);
+                    });
+                },
+                load(){
+                    
+                    this.showData();
+                    this.showLog();
+                    
+                },
+                start(){
+                    this.load();
+                    setInterval(this.load.bind(this), 1000 * 5);
+                }
+
+            };
+
+            API.start();
+
+
+
+
+        </script>
+    </body>
+</html>
