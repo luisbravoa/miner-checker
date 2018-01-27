@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "request": "^2.83.0",
     "ssh2-sftp-client": "^2.0.1"
   }
 }
