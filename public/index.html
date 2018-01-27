@@ -70,7 +70,7 @@
                     .then((data)=>{
                         let date = new Date(data.lastUpdated);
                         let formated = moment(date).format('MMMM Do YYYY, h:mm:ss a');
-                        document.querySelector('#info').textContent = `Last updated: ${formated} (${moment().startOf(date).fromNow()})`;
+                        document.querySelector('#info').textContent = `Last updated: ${formated} (${moment(date).startOf().fromNow()})`;
                     })
                     .catch((e)=>{
                         console.error(e);
