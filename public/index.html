@@ -39,6 +39,7 @@
         <div id="info"></div>
         <div id="log"></div>
         <script>
+            let lastUpdated;
             const API = {
                 getLog(){
                     return fetch('./log.html').then(function(response) {
@@ -63,14 +64,20 @@
                         console.error(e);
                     });
                 },
+                updateDate(date){
+                    console.log('update');
+                    if(date){
+                        lastUpdated = new Date(date);
+                    }    
+                    let formated = moment(lastUpdated).format('MMMM Do YYYY, h:mm:ss a');
+                    document.querySelector('#info').textContent = `Last updated: ${formated} (${moment(lastUpdated).startOf().fromNow()})`;
+                },
                 showData(){
                     let element = document.querySelector('#data');
 
                     this.getData()
                     .then((data)=>{
-                        let date = new Date(data.lastUpdated);
-                        let formated = moment(date).format('MMMM Do YYYY, h:mm:ss a');
-                        document.querySelector('#info').textContent = `Last updated: ${formated} (${moment(date).startOf().fromNow()})`;
+                        this.updateDate(data.lastUpdated);
                     })
                     .catch((e)=>{
                         console.error(e);
@@ -85,6 +92,8 @@
                 start(){
                     this.load();
                     setInterval(this.load.bind(this), 1000 * 30);
+
+                    setInterval(()=>this.updateDate(), 1000);
                 }
 
             };
